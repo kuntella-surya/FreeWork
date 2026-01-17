@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tab, Tabs, Spinner, Button, Form, Card } from "react-bootstrap";
@@ -20,14 +19,13 @@ function ProjectDetails() {
 
   const fetchProject = async () => {
     try {
-      const res = await fetch(`http://localhost:5001/api/projects/${projectId}`,{
-        method: "GET", 
+      const res = await fetch(`http://localhost:5001/api/projects/${projectId}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
-      
       const data = await res.json();
       if (res.ok) setProject(data.project);
     } catch (err) {
@@ -39,15 +37,14 @@ function ProjectDetails() {
 
   const fetchProposals = async () => {
     try {
-      const res = await fetch(`http://localhost:5001/api/proposals/${projectId}`,{
-         method: "GET", 
+      const res = await fetch(`http://localhost:5001/api/proposals/${projectId}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
       const data = await res.json();
-      console.log(data);
       if (res.ok) setProposals(data.proposals);
     } catch (err) {
       console.error("Error fetching proposals", err);
@@ -77,6 +74,26 @@ function ProjectDetails() {
     }
   };
 
+  const formatBudget = (budget) => {
+    if (!budget) return "N/A";
+    const min =
+      typeof budget.min === "object"
+        ? `${budget.min.value || 0} ${budget.min.unit || ""}`
+        : budget.min;
+    const max =
+      typeof budget.max === "object"
+        ? `${budget.max.value || 0} ${budget.max.unit || ""}`
+        : budget.max;
+    return `${min} - ${max}`;
+  };
+
+  const formatDuration = (duration) => {
+    if (!duration) return "N/A";
+    if (typeof duration === "object")
+      return `${duration.value || 0} ${duration.unit || "days"}`;
+    return `${duration} days`;
+  };
+
   if (loading) {
     return (
       <div className="text-center mt-5">
@@ -92,13 +109,30 @@ function ProjectDetails() {
       <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
         <Tab eventKey="details" title="📄 Details">
           <Card className="p-3 shadow-sm mb-3">
-            <p><strong>Description:</strong> {project.description}</p>
-            <p><strong>Category:</strong> {project.category}</p>
-            <p><strong>Skills Required:</strong> {project.skillsRequired.join(", ")}</p>
-            <p><strong>Budget:</strong> ${project.budget.min} - ${project.budget.max}</p>
-            <p><strong>Duration:</strong> {project.duration} days</p>
-            <p><strong>Type:</strong> {project.projectType}</p>
-            <p><strong>Posted By:</strong> {project.uname}</p>
+            <p>
+              <strong>Description:</strong> {project.description}
+            </p>
+            <p>
+              <strong>Category:</strong> {project.category}
+            </p>
+            <p>
+              <strong>Skills Required:</strong>{" "}
+              {Array.isArray(project.skillsRequired)
+                ? project.skillsRequired.join(", ")
+                : project.skillsRequired || "N/A"}
+            </p>
+            <p>
+              <strong>Budget:</strong> ₹{formatBudget(project.budget)}
+            </p>
+            <p>
+              <strong>Duration:</strong> {formatDuration(project.duration)}
+            </p>
+            <p>
+              <strong>Type:</strong> {project.projectType}
+            </p>
+            <p>
+              <strong>Posted By:</strong> {project.uname}
+            </p>
           </Card>
 
           <Card className="p-3 shadow-sm">
@@ -115,18 +149,22 @@ function ProjectDetails() {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="bidDescription">
-                <Form.Label>Describe Your Proposal Minimum of (100 charaters)</Form.Label>
+                <Form.Label>
+                  Describe Your Proposal (minimum 100 characters)
+                </Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={4}
-                  placeholder="What Makes You Besy Candidate For This Project"
+                  placeholder="What makes you the best candidate for this project?"
                   required
                   value={bidDescription}
                   onChange={(e) => setBidDescription(e.target.value)}
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit">Place Bid</Button>
+              <Button variant="primary" type="submit">
+                Place Bid
+              </Button>
             </Form>
           </Card>
         </Tab>
@@ -137,10 +175,19 @@ function ProjectDetails() {
           ) : (
             proposals.map((prop) => (
               <Card key={prop._id} className="mb-3 p-3 shadow-sm">
-                <p><strong>Freelancer:</strong> {prop.freelancerName}</p>
-                <p><strong>Bid:</strong> ${prop.amount}</p>
-                <p><strong>Proposal:</strong> {prop.description}</p>
-                <p><strong>Date:</strong> {new Date(prop.createdAt).toLocaleString()}</p>
+                <p>
+                  <strong>Freelancer:</strong> {prop.freelancerName}
+                </p>
+                <p>
+                  <strong>Bid:</strong> ₹{prop.amount}
+                </p>
+                <p>
+                  <strong>Proposal:</strong> {prop.description}
+                </p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(prop.createdAt).toLocaleString()}
+                </p>
               </Card>
             ))
           )}

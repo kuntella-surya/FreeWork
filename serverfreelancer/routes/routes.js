@@ -21,19 +21,23 @@ import User from "../models/User.js";
 import Message from "../models/Message.js";
 import Notification from "../models/Notification.js";
 import { getSocketInstance } from "../config/setSocketInstsnce.js";
+import { sendOtp,verifyOtp } from "../services/service.js";
 import mongoose from "mongoose";
-
+import { updateProject } from "../controllers/update.js";
+import { deleteProject } from "../controllers/deleteproject.js";
+import { getassignedFreelanceProfile } from "../controllers/assignedprofile.js";
 // inside assign route
 
 const router = express.Router();
 
 router.post("/signup", signupUser);
 router.post("/login", loginUser);
-
-
+router.post("/send-otp",sendOtp);
+router.post("/verify-otp", verifyOtp);
 router.get("/dashboard", protect, getDashboard);
-
-
+router.delete("/project/delete/:_id",protect,deleteProject);
+router.get("/getassigned/:id",protect,getassignedFreelanceProfile);
+router.put("/project/update/:id",protect,updateProject);
 router.get("/profile", protect, getUserProfile);
 router.get("/cur/:userId",protect,getUserProfile);
 router.put("/profile", protect, updateUserProfile);
@@ -62,7 +66,8 @@ router.put("/notifications/mark-all-read", protect, async (req, res) => {
 
 router.post("/proposals/:projectId",protect,PostProposal);
 router.get("/proposals/:projectId",protect,getProposals);
-router.get("/freelance-profile", protect, getProfile);
+// In your routes/routes.js
+router.get("/freelance-profile", protect, getFreelanceProfile); // ← this is correct
 router.get("/project/:projectId",protect, async (req, res) => {
   try {
     const { projectId } = req.params
@@ -327,6 +332,7 @@ router.post('/project/:projectId/assign', protect, async (req, res) => {
     if (!proposal) return res.status(404).json({ message: "Proposal not found" });
 
     project.assignedTo = proposal.freelancerId;
+    project.assignedName = proposal.freelancerName;
     project.status = "completed";
     await project.save();
 

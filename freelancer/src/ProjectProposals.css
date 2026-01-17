@@ -1,4 +1,95 @@
-.proposal-card:hover {
-  background-color: #f9f9ff;
-  transition: all 0.2s ease-in-out;
+.project-container {
+  background: #f5f7fa;
+  padding: 20px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.status-badge {
+  font-size: 0.9rem;
+  padding: 5px 10px;
+}
+
+.bidding-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.project-details-section, .proposals-section {
+  margin-bottom: 20px;
+}
+
+.project-details-card, .assigned-freelancer-card, .proposals-card, .client-info-card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.project-details-card, .assigned-freelancer-card {
+  padding: 15px;
+}
+
+.assigned-freelancer-card {
+  background: #e6ffe6;
+}
+
+.proposals-card {
+  padding: 15px;
+}
+
+.proposal-list {
+  list-style: none;
+  padding: 0;
+}
+
+.proposal-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.proposal-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.proposal-content {
+  display: flex;
+  align-items: center;
+}
+
+.freelancer-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.proposal-details {
+  flex-grow: 1;
+}
+
+.client-info-card {
+  position: sticky;
+  top: 20px;
+  padding: 15px;
+  background: #fff;
 }

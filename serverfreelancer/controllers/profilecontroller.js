@@ -4,13 +4,15 @@ export const createProfile = async (req, res) => {
   try {
     const {
       name,
+      uname,
       description,
       qualifications,
       skills,
       certifications,
       portfolio,
       workExperience,
-    } = req.body;
+    } = req.body; 
+    console.log("Request Body:", req.body);
 
     const profilePicUrl = req.files['profilePic']
       ? `/uploads/${req.files['profilePic'][0].filename}`
@@ -25,6 +27,7 @@ export const createProfile = async (req, res) => {
     const newProfile = new FreelancerProfile({
       userId: req.user.id,
       name,
+      uname,
       description,
       qualifications,
       skills: skills ? skills.split(',').map((s) => s.trim()) : [],

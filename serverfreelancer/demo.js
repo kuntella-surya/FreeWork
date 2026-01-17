@@ -9,10 +9,9 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { setupSocket } from './config/Socket.js';
 import routerMessage from './routes/MessageRoutes.js';
-
+import routergoggle from './routes/googleroutes.js';
 import { setSocketInstance } from './config/setSocketInstsnce.js';
-
-
+import ratingRoutes from './routes/ratingroutes.js';
 
 dotenv.config();
 connectDB();
@@ -68,12 +67,13 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api', authRoutes);
+app.use('/api/auth',routergoggle);
 app.use('/api/messages', routerMessage);
-
+app.use('/api/rating', ratingRoutes);
 
 app.get('/', (req, res) => res.send('✅ API Running'));
 
 const PORT = process.env.PORT || 5001;
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT,"0.0.0.0", () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

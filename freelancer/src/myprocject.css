@@ -1,0 +1,54 @@
+.myprojects-page {
+  background: #f9fafc;
+  min-height: 100vh;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #007bff, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.project-list-vertical {
+  display: flex;
+  flex-direction: column;
+  margin:0 20%;
+  gap: 1.5rem;
+}
+
+.project-card-vertical {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  transition: all 0.3s ease;
+}
+
+.project-card-vertical:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #007bff33;
+}
+
+.project-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 25px;
+  margin-top: 10px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.detail-item strong {
+  color: #000;
+  margin-right: 5px;
+}
+
+.badge {
+  font-size: 0.8rem;
+  border-radius: 8px;
+  padding: 6px 10px;
+}

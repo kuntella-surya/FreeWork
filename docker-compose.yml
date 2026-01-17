@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  
+  frontend:
+    build: ./freelancer
+    ports:
+      - "80:80"
+    depends_on:
+      - node-backend
+      - python-backend
+
+  node-backend:
+    build: ./serverfreelancer
+    ports:
+      - "5001:5001"
+
+  python-backend:
+    build: ./pythonserver
+    ports:
+      - "5000:5000"

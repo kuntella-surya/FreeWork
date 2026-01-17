@@ -1,48 +1,259 @@
-nav {
-  background: rgb(56, 54, 54);
-  height: 50px;
+/* Global background for the entire app */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2f3 0%, #d9e4f5 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #333;
+  transition: filter 0.3s ease;
+}
+
+/* Background blur effect when search is focused */
+body.search-focused {
+  filter: blur(4px);
+}
+
+/* Optional: glowing blur circles */
+.background-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 10% 20%, rgba(0, 150, 255, 0.25) 0%, transparent 80%),
+              radial-gradient(circle at 90% 80%, rgba(0, 255, 200, 0.25) 0%, transparent 80%);
+  filter: blur(90px);
+  z-index: -1;
+}
+
+/* --- Top Header --- */
+.top-header {
+  background: #232f3e;
+  padding: 8px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.top-header.search-focused {
+  background: rgba(35, 47, 62, 0.95);
+}
+
+.top-header .container-fluid {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
 }
-body{
-  background: linear-gradient(to right, #667eea, #764ba2);
-}
-.onav, .navigation {
-  display: flex;
-  gap: 20px;
-}
-.nav-link:hover {
-  text-decoration: underline;
-  color: #ffc107 !important;
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ff9900;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .navbar-brand:hover {
-  color: #ffe484 !important;
-  text-shadow: 1px 1px 2px black;
+  color: #ffbb33;
 }
 
-.btn:hover {
-  transform: scale(1.05);
-  transition: all 0.2s ease-in-out;
+.search-container {
+  flex-grow: 1;
+  max-width: 600px;
+  margin: 0 20px;
 }
 
-a {
-  color: rgb(192, 12, 12);
+.search-group {
+  width: 100%;
+  position: relative;
+}
+
+.search-input {
+  border: none;
+  border-radius: 4px 0 0 4px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  height: 36px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 120, 255, 0.3);
+}
+
+.search-icon {
+  background: #fff;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  padding: 8px 12px;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.search-icon:hover {
+  background: #f0f0f0;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  max-height: 300px;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.top-header.search-focused .suggestions-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background: #f5f5f5;
+}
+
+.suggestion-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.suggestion-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.suggestion-desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.user-actions .btn {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.post-btn {
+  background: linear-gradient(90deg, #28a745, #20c997);
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.post-btn:hover {
+  background: linear-gradient(90deg, #218838, #1abc9c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn {
+  background: linear-gradient(90deg, #ff4b5c, #ff1e42);
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(90deg, #ff1e42, #c51125);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Bottom Navigation --- */
+.bottom-nav {
+  background: #37475a;
+  padding: 5px 0;
+  border-top: 1px solid #2c3e50;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-nav .container-fluid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
   text-decoration: none;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
+
+.nav-icon:hover {
+  color: #ff9900;
+  transform: translateY(-2px);
+}
+
+.nav-icon svg {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.nav-icon .badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.7rem;
+}
+
+/* Responsive Design */
 @media (max-width: 991px) {
-  .navbar-collapse {
-    background-color: #343a40; /* dark background */
+  .top-header .container-fluid {
+    flex-direction: column;
+    gap: 10px;
   }
-
-  .navbar-collapse .nav-link {
-    color: white !important; /* override default Bootstrap styles */
+  .search-container {
+    width: 100%;
+    margin: 0;
+  }
+  .search-group {
+    width: 100%;
+  }
+  .user-actions {
+    justify-content: center;
+    width: 100%;
+  }
+  .bottom-nav .container-fluid {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  .nav-icon {
+    width: 20%;
+    text-align: center;
   }
 }
-
-
+/* --- Forms --- */
 .login-form {
   width: 100%;
   max-width: 400px;
@@ -65,6 +276,8 @@ a {
 .signup-form select {
   color: #666;
 }
+
+/* --- List Items --- */
 .list-group-item {
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -73,37 +286,40 @@ a {
 .list-group-item:hover {
   background-color: #f8f9fa;
 }
+
+/* --- Cards --- */
 .card {
+  border-radius: 16px;
+  border: none;
   transition: transform 0.3s ease;
 }
+
 .card:hover {
   transform: translateY(-5px);
 }
+
+/* --- Post Project Page --- */
 .post-project-container {
   max-width: 700px;
   margin: auto;
 }
 
-.card {
-  border-radius: 16px;
-  border: none;
-}
 .project-list {
   display: flex;
   flex-direction: column;
   gap: 2rem;
   margin: auto;
 }
+
 .project-card {
   background-color: #ffffff;
   border-radius: 12px;
   padding: 1.5rem;
   border-left: 6px solid #0d6efd;
   transition: all 0.3s ease;
-  width: 80%; /* this sets it to 80% */
-  margin: 0 auto; /* this centers it */
+  width: 80%;
+  margin: 0 auto;
 }
-
 
 .project-card:hover {
   box-shadow: 0 8px 16px rgba(13, 110, 253, 0.2);
@@ -124,24 +340,7 @@ a {
   color: #333;
 }
 
-.project-cardt {
-  transition: transform 0.2s ease-in-out;
-  border-radius: 10px;
-}
-
-.project-cardt:hover {
-  transform: scale(1.02);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.desc-trim {
-  max-height: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-
-/*-----*/
+/* --- Trim Descriptions --- */
 .desc-trim {
   max-height: 4.5em;
   overflow: hidden;
@@ -153,15 +352,7 @@ a {
   color: #333;
 }
 
-.project-cardt {
-  transition: transform 0.2s ease;
-}
-
-.project-cardt:hover {
-  transform: translateY(-5px);
-}
-
-/*-------*/
+/* --- Chat Styles --- */
 .chat-container {
   max-width: 800px;
   margin: auto;

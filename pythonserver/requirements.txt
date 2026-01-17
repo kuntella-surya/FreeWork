@@ -1,0 +1,9 @@
+flask
+flask-cors
+python-dotenv
+pymongo
+spacy==3.7.2
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
+nltk==3.9.1
+scikit-learn==1.5.2
+docker compose up --build
