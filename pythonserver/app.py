@@ -55,7 +55,39 @@ PREDEFINED_SKILLS = {
 # MongoDB client
 client = MongoClient(os.environ.get("MONGODB_URI"), serverSelectionTimeoutMS=60000)
 db = client['test']
+# ADD THIS BELOW MongoDB setup
+global_vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+global_job_matrix = None
+global_jobs = []
 
+
+def build_job_index():
+    global global_vectorizer, global_job_matrix, global_jobs
+
+    jobs = list(db.projects.find({}, {
+        "title": 1,
+        "description": 1,
+        "skillsRequired": 1,
+        "category": 1
+    }))
+
+    processed_texts = []
+
+    for job in jobs:
+        title = job.get("title", "")
+        skills = " ".join(job.get("skillsRequired", []))
+        description = job.get("description", "")
+
+        # 🔥 WEIGHTED TEXT
+        weighted_text = (title + " ") * 3 + (skills + " ") * 2 + description
+        processed = preprocess_text_spacy(weighted_text)
+
+        processed_texts.append(processed)
+
+    global_jobs = jobs
+    global_job_matrix = global_vectorizer.fit_transform(processed_texts)
+
+    logger.info("Job index built successfully")
 # Utility functions
 def preprocess_text(text):
     return re.sub(r'\s+', ' ', text.lower().strip())
@@ -111,60 +143,57 @@ def analyze_sentiment_endpoint():
     sentiment_result = analyze_sentiment(text)
     return jsonify(sentiment_result)
 # ... (keep your imports and utils)
-
 @app.route("/recommend-jobs", methods=["POST"])
 def recommend_jobs():
+    global global_job_matrix, global_jobs
+
     data = request.get_json()
     search_query = data.get("query", "").strip().lower()
-    freelancer_skills = data.get("skills", [])  # Now used!
+    freelancer_skills = data.get("skills", [])
 
     if not search_query:
-        logger.debug("No search query provided.")
         return jsonify({"error": "Missing search query"}), 400
 
     try:
-        # Suggest category from query
-        categorized = extract_skills(search_query)
-        suggested_category = list(categorized.keys())[0] if categorized else None
-
-        # Pre-filter jobs by suggested category if available (efficient!)
-        query_filter = {"category": suggested_category} if suggested_category else {}
-        jobs = list(db.projects.find(query_filter, {"title": 1, "description": 1, "skillsRequired": 1, "category": 1, "_id": 1}))
-        logger.debug(f"Filtered jobs fetched: {len(jobs)} (category: {suggested_category})")
-
-        if not jobs:
-            return jsonify({"threshold_values": [], "suggestions": []}), 200
-
-        # Incorporate freelancer skills into query for personalization
+        # Combine query + skills
         skills_text = " ".join(freelancer_skills).lower()
         full_query = f"{search_query} {skills_text}".strip()
         processed_query = preprocess_text_spacy(full_query)
 
-        job_texts = [preprocess_text_spacy(f"{job.get('title', '')} {job.get('description', '')} {' '.join(job.get('skillsRequired', []))}") for job in jobs]
+        # 🔥 USE PRECOMPUTED TF-IDF
+        query_vec = global_vectorizer.transform([processed_query])
+        cosine_sim = cosine_similarity(query_vec, global_job_matrix).flatten()
 
-        all_texts = [processed_query] + job_texts
-        vectorizer = TfidfVectorizer(ngram_range=(1, 2))  # Add n-grams for better phrase matching
-        tfidf_matrix = vectorizer.fit_transform(all_texts)
-        cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
+        results = []
 
-        # Sort and filter with higher threshold
-        sim_scores = sorted(enumerate(cosine_sim), key=lambda x: x[1], reverse=True)
-        suggestions = [
-            {
-                "job_id": str(jobs[i]["_id"]),
-                "title": jobs[i].get("title", "No Title"),
-                "description": jobs[i].get("description", "No Description"),
-                "score": round(float(score), 3)
-            }
-            for i, score in sim_scores if score > 0.15  # Stricter threshold
-        ][:10]  # Limit to top 10
+        for i, score in enumerate(cosine_sim):
+            job = global_jobs[i]
 
-        return jsonify({"query": search_query, "suggestions": suggestions}), 200
+            # 🔥 SKILL BOOST
+            job_skills = set(job.get("skillsRequired", []))
+            user_skills = set(freelancer_skills)
+
+            skill_boost = len(job_skills & user_skills) * 0.05
+            final_score = score + skill_boost
+
+            if final_score > 0.15:
+                results.append({
+                    "job_id": str(job["_id"]),
+                    "title": job.get("title", "No Title"),
+                    "description": job.get("description", "No Description"),
+                    "score": round(float(final_score), 3)
+                })
+
+        results = sorted(results, key=lambda x: x["score"], reverse=True)[:10]
+
+        return jsonify({
+            "query": search_query,
+            "suggestions": results
+        }), 200
 
     except Exception as e:
         logger.error(f"Error in recommend_jobs: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500
-
 @app.route("/related-jobs/<job_id>", methods=["POST"])
 def get_related_jobs(job_id):
     data = request.get_json()
@@ -264,10 +293,9 @@ def match_jobs():
     except Exception as e:
         logger.error(f"Error connecting to MongoDB Atlas: {e}")
         return jsonify({"error": "Failed to fetch jobs", "details": str(e)}), 500
-
-# Run app
 if __name__ == "__main__":
     try:
+        build_job_index()   # 🔥 ADD THIS
         app.run(debug=True, host="0.0.0.0", port=5000)
     finally:
         client.close()

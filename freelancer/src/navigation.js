@@ -157,7 +157,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
       <header className={`top-header ${isSearchFocused ? 'search-focused' : ''}`}>
         <div className="container-fluid px-4 d-flex justify-content-between align-items-center">
           <Link className="navbar-brand text-warning fw-bold fs-4" to="/">
-            Freelance<span className="text-white">Site</span>
+            Free<span className="text-white">Work</span>
           </Link>
           <div className="search-container">
             <form className="search-group" onSubmit={handleSearchSubmit}>
@@ -431,7 +431,7 @@ export default function NavWrapper() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/viewprofile" element={<ViewProfile currentUser={currentUser} />} />
           <Route path="/viewprofile/:id" element={<ViewProfile currentUser={currentUser} />} />
-          <Route path="/project" element={<PostProject />} />
+          <Route path="/postproject" element={<PostProject />} />
           <Route path="/myprojects" element={<MyProjects />} />
           <Route path="/findwork" element={<FindWork />} />
           <Route path="/project/:projectId" element={<ProjectDetails />} />

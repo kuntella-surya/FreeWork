@@ -1,23 +1,36 @@
 import mongoose from "mongoose";
 import Projectpost from "../models/Project.js";
+
 export const findWork = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
-    const { latitude, longitude, range = 10, category, projectType, sortBy } = req.query;
+    const { 
+      latitude, 
+      longitude, 
+      range = 10, 
+      category, 
+      projectType, 
+      sortBy = "date" 
+    } = req.query;
 
-    // Only show open projects
     let matchStage = {
       clientId: { $ne: userId },
-      status: "open",
+      status: "open",           // Only show open projects
     };
 
     if (category) matchStage.category = category;
-    if (projectType) matchStage.projectType = projectType;
+    
+    // Handle multiple project types
+    if (projectType) {
+      matchStage.projectType = { 
+        $in: projectType.split(",").map(t => t.trim()) 
+      };
+    }
 
-    let projects;
+    let projects = [];
 
     if (latitude && longitude) {
-      const maxDistance = parseFloat(range) * 1000; // km → meters
+      const maxDistance = parseFloat(range) * 1000; // km to meters
 
       projects = await Projectpost.aggregate([
         {
@@ -26,27 +39,45 @@ export const findWork = async (req, res) => {
               type: "Point",
               coordinates: [parseFloat(longitude), parseFloat(latitude)],
             },
-            distanceField: "distance",
-            maxDistance,
+            distanceField: "distance",     // distance in meters
+            maxDistance: maxDistance,
             spherical: true,
             query: matchStage,
           },
         },
+        {
+          $sort: sortBy === "budget" 
+            ? { "budget.max": -1 } 
+            : { createdAt: -1 }
+        },
+        { $limit: 50 }   // Prevent too many results
       ]);
     } else {
-      projects = await Projectpost.find(matchStage);
+      // Fallback when location not available
+      let sortOption = { createdAt: -1 };
+      if (sortBy === "budget") sortOption = { "budget.max": -1 };
+
+      projects = await Projectpost.find(matchStage)
+        .sort(sortOption)
+        .limit(50);
     }
 
-    // Sorting logic
-    if (sortBy === "budget") {
-      projects.sort((a, b) => b.budget.max - a.budget.max);
-    } else if (sortBy === "date") {
-      projects.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
+    // Add distance in km for frontend
+    projects = projects.map(project => ({
+      ...project,
+      distance: project.distance ? (project.distance / 1000).toFixed(2) + " km" : null
+    }));
 
-    res.status(200).json({ projects });
+    res.status(200).json({ 
+      success: true,
+      projects 
+    });
+
   } catch (err) {
     console.error("Error in findWork:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ 
+      message: "Server error", 
+      error: err.message 
+    });
   }
 };
