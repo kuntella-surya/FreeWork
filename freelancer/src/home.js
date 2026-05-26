@@ -231,7 +231,7 @@ const Home = () => {
         <p>
           Join thousands of freelancers and businesses today.
         </p>
-// redeploy test
+
         <button>
           Get Started Free
         </button>
