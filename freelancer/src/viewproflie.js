@@ -29,7 +29,7 @@ const ViewProfile = ({ currentUser }) => {
   const analyzeSentiment = async (text) => {
     if (!text) return { sentiment: "neutral", score: 0, flag: false };
     try {
-      const res = await fetch("http://localhost:5000/analyze-sentiment", {
+      const res = await fetch("${process.env.REACT_APP_API_URL}/ai/analyze-sentiment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

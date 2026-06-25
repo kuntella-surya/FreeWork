@@ -102,7 +102,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
   // Fetch recommended jobs on typing
   useEffect(() => {
     if (searchQuery) {
-      fetch("http://localhost:5000/recommend-jobs", {
+      fetch("${process.env.REACT_APP_API_URL}/ai/recommend-jobs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -289,7 +289,7 @@ function RelatedJobs() {
       setError(null);
       try {
         console.log("Fetching related jobs for jobId:", jobId, "query:", query);
-        const res = await fetch(`http://localhost:5000/related-jobs/${jobId}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/ai/related-jobs/${jobId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

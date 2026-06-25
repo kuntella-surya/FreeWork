@@ -13,7 +13,7 @@ function RelatedJobs() {
     async function fetchRelatedJobs() {
   try {
     console.log("Fetching related jobs for jobId:", jobId, "query:", query);
-    const res = await fetch(`http://localhost:5000/related-jobs/${jobId}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/ai/related-jobs/${jobId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, skills: [] }),

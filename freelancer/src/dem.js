@@ -127,10 +127,10 @@ function PostProject() {
   // Function to extract category and suggest skills from description
   const extractCategoryAndSkills = async () => {
     try {
-      const descriptionResponse = await axios.post("http://localhost:5000/extract-skills", {
+      const descriptionResponse = await axios.post("${process.env.REACT_APP_API_URL}/ai/extract-skills", {
         text: form.description,
       });
-      const skillsResponse = await axios.post("http://localhost:5000/extract-skills", {
+      const skillsResponse = await axios.post("${process.env.REACT_APP_API_URL}/ai/extract-skills", {
         text: form.skillsRequired || form.description, // Fallback to description if skillsRequired is empty
       });
 
