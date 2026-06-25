@@ -45,7 +45,7 @@ export default function ProjectProposals(props) {
     const fetchProjectData = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5001/api/project/${projectId}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/${projectId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function ProjectProposals(props) {
             (data.proposals || []).map(async (proposal) => {
               if (proposal.freelancerId) {
                 const freelancerRes = await fetch(
-                  `http://localhost:5001/api/cur/${proposal.freelancerId}`,
+                  `${process.env.REACT_APP_API_URL}/api/cur/${proposal.freelancerId}`,
                   { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const freelancerData = await freelancerRes.json();
@@ -95,7 +95,7 @@ export default function ProjectProposals(props) {
 
     const fetchExistingRating = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/rating/${projectId}/client`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/rating/${projectId}/client`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -114,7 +114,7 @@ export default function ProjectProposals(props) {
 
   const fetchFreelancerDetails = async (freelancerId) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/getassigned/${freelancerId}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/getassigned/${freelancerId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -141,7 +141,7 @@ export default function ProjectProposals(props) {
     if (!selectedProposal || project?.assignedTo) return;
     setAssigning(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/project/${projectId}/assign`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/${projectId}/assign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +176,7 @@ export default function ProjectProposals(props) {
     if (!window.confirm("Are you sure you want to unassign this project?")) return;
     setAssigning(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/project/${projectId}/unassign`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/${projectId}/unassign`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +209,7 @@ export default function ProjectProposals(props) {
     setSubmitting(true);
 
     try {
-      const res = await fetch(`http://localhost:5001/api/rating/${projectId}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/rating/${projectId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

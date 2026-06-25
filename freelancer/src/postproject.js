@@ -240,7 +240,7 @@ function PostProject() {
         categorizedSkills: form.categorizedSkills,
       };
 
-      const res = await fetch("http://localhost:5001/api/project/postp", {
+      const res = await fetch("${process.env.REACT_APP_API_URL}/api/project/postp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

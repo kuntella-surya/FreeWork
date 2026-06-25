@@ -19,7 +19,7 @@ export default function Verification() {
 
       // call backend API to send 
       
-      const res = await fetch("http://localhost:5001/api/send-otp", {
+      const res = await fetch("${process.env.REACT_APP_API_URL}/api/send-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ target, method }),
@@ -39,7 +39,7 @@ export default function Verification() {
 
   const handleVerify = async () => {
     try {
-           const res = await fetch("http://localhost:5001/api/verify-otp", {
+           const res = await fetch("${process.env.REACT_APP_API_URL}/api/verify-otp", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({

@@ -15,7 +15,7 @@ export async function getCurrentUser() {
   const userId = decoded.id;
   try {
     const res = await fetch(
-      `http://localhost:5001/api/cur/${userId}`,
+      `${process.env.REACT_APP_API_URL}/api/cur/${userId}`,
       {
         method: 'GET',
         headers: {

@@ -13,7 +13,7 @@ export default function MessagesList({ currentUser }) {
     if (!token || !currentUser?._id) return;
     (async () => {
       const res = await fetch(
-        `http://localhost:5001/api/conversations/${currentUser._id}`, 
+        `${process.env.REACT_APP_API_URL}/api/conversations/${currentUser._id}`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await res.json();
@@ -49,7 +49,7 @@ export default function MessagesList({ currentUser }) {
                 src={
                   conv.profilePicUrl?.startsWith("http")
                     ? conv.profilePicUrl
-                    : `http://localhost:5001/uploads/${conv.profilePicUrl}`
+                    : `${process.env.REACT_APP_API_URL}/uploads/${conv.profilePicUrl}`
                 }
                 alt={conv.otherUserName}
               />

@@ -27,7 +27,7 @@ function Dashboard({ currentUser }) {
 
     const fetchStats = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/dashboard/${currentUser._id}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/dashboard/${currentUser._id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function Dashboard({ currentUser }) {
 
     const fetchChartData = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/charts/${currentUser._id}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/charts/${currentUser._id}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

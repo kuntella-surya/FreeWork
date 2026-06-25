@@ -37,7 +37,7 @@ function Signup() {
     }
 
     try {
-      const res = await fetch('http://localhost:5001/api/signup', {
+      const res = await fetch('${process.env.REACT_APP_API_URL}/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -56,7 +56,7 @@ function Signup() {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      const res = await fetch('http://localhost:5001/api/auth/google', {
+      const res = await fetch('${process.env.REACT_APP_API_URL}/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: credentialResponse.credential }),

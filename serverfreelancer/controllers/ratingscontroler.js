@@ -6,7 +6,7 @@ export const submitRating = async (req, res) => {
   const projectId = req.params.projectId;
   const clientId = req.user.id; // from auth middleware
   const { freelancerId, rating, feedback,ratedBy } = req.body;
-  console.log("Received rating submission:", { projectId, clientId, freelancerId, rating, feedback,ratedBy });
+  
   if (!freelancerId || !rating) {
     return res.status(400).json({ message: "Freelancer ID and rating are required." });
   }

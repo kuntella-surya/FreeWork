@@ -12,7 +12,7 @@ import {
 import { io } from "socket.io-client";
 import { useUnread } from "./UnreadContext";
 import { getCurrentUser } from "./getCurrentuser";
-import Home from "./home";
+import { Navigate } from "react-router-dom";import Home from "./home";
 import Login from "./login";
 import Signup from "./signup";
 import Dashboard from "./Dashboard";
@@ -41,7 +41,7 @@ import { FaUserTie, FaBriefcase, FaTasks } from "react-icons/fa";
 import { MdPostAdd, MdSupportAgent } from "react-icons/md";
 import { FiLogIn, FiLogOut, FiUserPlus } from "react-icons/fi";
 
-const socket = io("http://localhost:5001");
+const socket = io("${process.env.REACT_APP_API_URL}");
 
 function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
   const { unreadTotal, setUnreadTotal } = useUnread();
@@ -57,7 +57,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
     if (!currentUser?._id || !token) return;
     async function fetchProfile() {
       try {
-        const res = await fetch(`http://localhost:5001/api/freelance-profile`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/freelance-profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -80,7 +80,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
     async function fetchUnread() {
       try {
         const res = await fetch(
-          `http://localhost:5001/api/conversations/${currentUser._id}`,
+          `${process.env.REACT_APP_API_URL}/api/conversations/${currentUser._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (res.ok) {
@@ -353,6 +353,13 @@ function RelatedJobs() {
     </div>
   );
 }
+function ProtectedRoute({ isLoggedIn, children }) {
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
 
 export default function NavWrapper() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -418,30 +425,203 @@ export default function NavWrapper() {
       />
       {!loadingUser && (
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Dashboard currentUser={currentUser} /> : <Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/otp" element={<Verification />} />
-          <Route path="/hirefreelancer" element={<HireFreelancer currentUser={currentUser} />} />
-          <Route path="/solutions" element={<Solutions />} />
-          <Route path="/dashboard" element={<Dashboard currentUser={currentUser} />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/membership" element={<Membership />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="/viewprofile" element={<ViewProfile currentUser={currentUser} />} />
-          <Route path="/viewprofile/:id" element={<ViewProfile currentUser={currentUser} />} />
-          <Route path="/postproject" element={<PostProject />} />
-          <Route path="/myprojects" element={<MyProjects />} />
-          <Route path="/findwork" element={<FindWork />} />
-          <Route path="/project/:projectId" element={<ProjectDetails />} />
-          <Route path="/project/edit/:id" element={<EditProject />} />
-          <Route path="/project/proposals/:projectId" element={<ProjectProposals currentUser={currentUser} />} />
-          <Route path="/chat/:otherUserId" element={<ChatPage currentUser={currentUser} />} />
-          <Route path="/messages" element={<MessagesList currentUser={currentUser} />} />
-          <Route path="/notifications" element={<Notifications setNotificationCount={setNotificationCount} />} />
-          <Route path="/related-jobs/:jobId" element={<RelatedJobs />} />
-        </Routes>
+  {/* Public Routes */}
+  <Route
+    path="/"
+    element={
+      isLoggedIn ? (
+        <Dashboard currentUser={currentUser} />
+      ) : (
+        <Home />
+      )
+    }
+  />
+
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/otp" element={<Verification />} />
+
+  {/* Protected Routes */}
+
+  <Route
+    path="/hirefreelancer"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <HireFreelancer currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/solutions"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Solutions />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Dashboard currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/profile"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Profile />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/settings"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Settings />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/membership"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Membership />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/search"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <SearchResults />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/viewprofile"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <ViewProfile currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/viewprofile/:id"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <ViewProfile currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/postproject"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <PostProject />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/myprojects"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <MyProjects />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/findwork"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <FindWork />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/project/:projectId"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <ProjectDetails />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/project/edit/:id"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <EditProject />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/project/proposals/:projectId"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <ProjectProposals currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/chat/:otherUserId"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <ChatPage currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/messages"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <MessagesList currentUser={currentUser} />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/notifications"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <Notifications
+          setNotificationCount={setNotificationCount}
+        />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route
+    path="/related-jobs/:jobId"
+    element={
+      <ProtectedRoute isLoggedIn={isLoggedIn}>
+        <RelatedJobs />
+      </ProtectedRoute>
+    }
+  />
+
+  {/* Invalid Route */}
+  <Route
+    path="*"
+    element={<Navigate to={isLoggedIn ? "/" : "/login"} replace />}
+  />
+</Routes>
       )}
     </>
   );

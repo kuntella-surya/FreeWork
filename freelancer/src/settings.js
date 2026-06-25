@@ -9,7 +9,7 @@ function Settings() {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/profile', {
+    fetch('${process.env.REACT_APP_API_URL}/api/profile', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -26,7 +26,7 @@ function Settings() {
 
   const handleFieldSave = async (field) => {
     try {
-      const res = await fetch('http://localhost:5001/api/profile', {
+      const res = await fetch('${process.env.REACT_APP_API_URL}/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

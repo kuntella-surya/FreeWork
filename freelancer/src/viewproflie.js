@@ -50,8 +50,8 @@ const ViewProfile = ({ currentUser }) => {
     const fetchProfile = async () => {
       try {
         const url = id
-          ? `http://localhost:5001/api/getassigned/${id}`
-          : `http://localhost:5001/api/freelance-profile`;
+          ? `${process.env.REACT_APP_API_URL}/api/getassigned/${id}`
+          : `${process.env.REACT_APP_API_URL}/api/freelance-profile`;
 
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +92,7 @@ const ViewProfile = ({ currentUser }) => {
       if (!profile?.userId) return;
       try {
         const res = await fetch(
-          `http://localhost:5001/api/rating/freelancer/${profile.userId}`
+          `${process.env.REACT_APP_API_URL}/api/rating/freelancer/${profile.userId}`
         );
         const data = await res.json();
         console.log("Fetched ratings:", data);
@@ -187,8 +187,8 @@ const ViewProfile = ({ currentUser }) => {
     try {
       const res = await fetch(
         profile
-          ? "http://localhost:5001/api/update-profile"
-          : "http://localhost:5001/api/create-profile",
+          ? "${process.env.REACT_APP_API_URL}/api/update-profile"
+          : "${process.env.REACT_APP_API_URL}/api/create-profile",
         {
           method: profile ? "PUT" : "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -254,13 +254,13 @@ const ViewProfile = ({ currentUser }) => {
             className="position-relative"
             style={{
               height: "250px",
-              backgroundImage: `ur[](http://localhost:5001${profile.coverPicUrl})`,
+              backgroundImage: `ur[](${process.env.REACT_APP_API_URL}${profile.coverPicUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
             <img
-              src={`http://localhost:5001${profile.profilePicUrl}`}
+              src={`${process.env.REACT_APP_API_URL}${profile.profilePicUrl}`}
               alt="Profile"
               className="rounded-circle shadow position-absolute"
               style={{

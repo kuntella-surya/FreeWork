@@ -38,7 +38,7 @@ export default function EditProject() {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/project/${id}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -84,7 +84,7 @@ export default function EditProject() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/project/update/${id}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/update/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
