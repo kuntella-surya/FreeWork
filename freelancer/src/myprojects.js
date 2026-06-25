@@ -29,7 +29,7 @@ function MyProjects() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("${process.env.REACT_APP_API_URL}/api/project/getp", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/getp`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });

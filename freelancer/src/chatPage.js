@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import Picker from "emoji-picker-react";
 import "./ChatPage.css";
 
-const socket = io("${process.env.REACT_APP_API_URL}");
+const socket = io(`${process.env.REACT_APP_API_URL}`);
 
 export default function ChatPage({ currentUser }) {
   const { otherUserId } = useParams();
@@ -46,7 +46,7 @@ export default function ChatPage({ currentUser }) {
   // 4️⃣ Mark messages as read when chat opens or new arrive
   useEffect(() => {
     if (!currentUser?._id || !roomId) return;
-    fetch("${process.env.REACT_APP_API_URL}/api/messages/mark-read", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/messages/mark-read`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function ChatPage({ currentUser }) {
       content: trimmed,
       timestamp: new Date().toISOString(),
     };
-    await fetch("${process.env.REACT_APP_API_URL}/api/messages", {
+    await fetch(`${process.env.REACT_APP_API_URL}/api/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

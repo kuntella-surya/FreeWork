@@ -187,8 +187,8 @@ const ViewProfile = ({ currentUser }) => {
     try {
       const res = await fetch(
         profile
-          ? "${process.env.REACT_APP_API_URL}/api/update-profile"
-          : "${process.env.REACT_APP_API_URL}/api/create-profile",
+          ? `${process.env.REACT_APP_API_URL}/api/update-profile`
+          : `${process.env.REACT_APP_API_URL}/api/create-profile`,
         {
           method: profile ? "PUT" : "POST",
           headers: { Authorization: `Bearer ${token}` },

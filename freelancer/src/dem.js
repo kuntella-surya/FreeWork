@@ -239,7 +239,7 @@ function PostProject() {
         };
         console.log("Sending to server:", postData); // Log the data being sent
 
-        const res = await fetch("${process.env.REACT_APP_API_URL}/api/project/postp", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/postp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

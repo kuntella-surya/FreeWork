@@ -41,7 +41,7 @@ import { FaUserTie, FaBriefcase, FaTasks } from "react-icons/fa";
 import { MdPostAdd, MdSupportAgent } from "react-icons/md";
 import { FiLogIn, FiLogOut, FiUserPlus } from "react-icons/fi";
 
-const socket = io("${process.env.REACT_APP_API_URL}");
+const socket = io(`${process.env.REACT_APP_API_URL}`);
 
 function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
   const { unreadTotal, setUnreadTotal } = useUnread();

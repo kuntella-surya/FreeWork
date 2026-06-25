@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner, Alert, ListGroup, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
-const socket = io("${process.env.REACT_APP_API_URL}");
+const socket = io(`${process.env.REACT_APP_API_URL}`);
 export default function Notifications({ setNotificationCount }) {
   const [notif, setNotif] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ export default function Notifications({ setNotificationCount }) {
 
   useEffect(() => {
     async function fetchNotifications() {
-      const res = await fetch("${process.env.REACT_APP_API_URL}/api/notifications", { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/notifications`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.ok) {
         const data = await res.json();
         setNotif(data);
