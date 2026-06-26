@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import Picker from "emoji-picker-react";
 import "./ChatPage.css";
 
-const socket = io(`${process.env.REACT_APP_API_URL}`);
+const socket = io(``);
 
 export default function ChatPage({ currentUser }) {
   const { otherUserId } = useParams();
@@ -23,7 +23,7 @@ export default function ChatPage({ currentUser }) {
   useEffect(() => {
     if (!token || !roomId) return;
     (async () => {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/messages/${roomId}`, {
+      const res = await fetch(`/api/messages/${roomId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const msgs = await res.json();
@@ -46,7 +46,7 @@ export default function ChatPage({ currentUser }) {
   // 4️⃣ Mark messages as read when chat opens or new arrive
   useEffect(() => {
     if (!currentUser?._id || !roomId) return;
-    fetch(`${process.env.REACT_APP_API_URL}/api/messages/mark-read`, {
+    fetch(`/api/messages/mark-read`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function ChatPage({ currentUser }) {
       content: trimmed,
       timestamp: new Date().toISOString(),
     };
-    await fetch(`${process.env.REACT_APP_API_URL}/api/messages`, {
+    await fetch(`/api/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function ChatPage({ currentUser }) {
           src={
             otherUserPic?.startsWith("http")
               ? otherUserPic
-              : `${process.env.REACT_APP_API_URL}/uploads/${otherUserPic}`
+              : `/uploads/${otherUserPic}`
           }
           alt="profile"
           className="chat-profile-pic"

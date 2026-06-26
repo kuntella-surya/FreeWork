@@ -41,7 +41,7 @@ import { FaUserTie, FaBriefcase, FaTasks } from "react-icons/fa";
 import { MdPostAdd, MdSupportAgent } from "react-icons/md";
 import { FiLogIn, FiLogOut, FiUserPlus } from "react-icons/fi";
 
-const socket = io(`${process.env.REACT_APP_API_URL}`);
+const socket = io(``);
 
 function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
   const { unreadTotal, setUnreadTotal } = useUnread();
@@ -57,7 +57,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
     if (!currentUser?._id || !token) return;
     async function fetchProfile() {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/freelance-profile`, {
+        const res = await fetch(`/api/freelance-profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
@@ -80,7 +80,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
     async function fetchUnread() {
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/conversations/${currentUser._id}`,
+          `/api/conversations/${currentUser._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (res.ok) {
@@ -102,7 +102,7 @@ function Header({ isLoggedIn, onLogout, currentUser, notificationCount }) {
   // Fetch recommended jobs on typing
   useEffect(() => {
     if (searchQuery) {
-      fetch("${process.env.REACT_APP_API_URL}/ai/recommend-jobs", {
+      fetch("/ai/recommend-jobs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -289,7 +289,7 @@ function RelatedJobs() {
       setError(null);
       try {
         console.log("Fetching related jobs for jobId:", jobId, "query:", query);
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/ai/related-jobs/${jobId}`, {
+        const res = await fetch(`/ai/related-jobs/${jobId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

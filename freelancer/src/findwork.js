@@ -26,7 +26,7 @@ function FindWork() {
   const [hourlyRateMax, setHourlyRateMax] = useState(80); // New: Maximum hourly rate
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL || `${process.env.REACT_APP_API_URL}`;
+  const API_URL = process.env.REACT_APP_API_URL || ``;
 
   useEffect(() => {
     if (!token) {

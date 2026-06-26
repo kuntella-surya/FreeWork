@@ -9,7 +9,7 @@ export default function AssignedProjects() {
   useEffect(() => {
     const fetchAssigned = async () => {
       try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/projects/assigned`, {
+        const res = await fetch(`/api/projects/assigned`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

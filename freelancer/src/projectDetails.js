@@ -19,7 +19,7 @@ function ProjectDetails() {
 
   const fetchProject = async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/projects/${projectId}`, {
+      const res = await fetch(`/api/projects/${projectId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ function ProjectDetails() {
 
   const fetchProposals = async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/proposals/${projectId}`, {
+      const res = await fetch(`/api/proposals/${projectId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ function ProjectDetails() {
   const handleBidSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/proposals/${projectId}`, {
+      const res = await fetch(`/api/proposals/${projectId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

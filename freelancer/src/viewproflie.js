@@ -29,7 +29,7 @@ const ViewProfile = ({ currentUser }) => {
   const analyzeSentiment = async (text) => {
     if (!text) return { sentiment: "neutral", score: 0, flag: false };
     try {
-      const res = await fetch("${process.env.REACT_APP_API_URL}/ai/analyze-sentiment", {
+      const res = await fetch("/ai/analyze-sentiment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,8 +50,8 @@ const ViewProfile = ({ currentUser }) => {
     const fetchProfile = async () => {
       try {
         const url = id
-          ? `${process.env.REACT_APP_API_URL}/api/getassigned/${id}`
-          : `${process.env.REACT_APP_API_URL}/api/freelance-profile`;
+          ? `/api/getassigned/${id}`
+          : `/api/freelance-profile`;
 
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +92,7 @@ const ViewProfile = ({ currentUser }) => {
       if (!profile?.userId) return;
       try {
         const res = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/rating/freelancer/${profile.userId}`
+          `/api/rating/freelancer/${profile.userId}`
         );
         const data = await res.json();
         console.log("Fetched ratings:", data);
@@ -187,8 +187,8 @@ const ViewProfile = ({ currentUser }) => {
     try {
       const res = await fetch(
         profile
-          ? `${process.env.REACT_APP_API_URL}/api/update-profile`
-          : `${process.env.REACT_APP_API_URL}/api/create-profile`,
+          ? `/api/update-profile`
+          : `/api/create-profile`,
         {
           method: profile ? "PUT" : "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -254,13 +254,13 @@ const ViewProfile = ({ currentUser }) => {
             className="position-relative"
             style={{
               height: "250px",
-              backgroundImage: `ur[](${process.env.REACT_APP_API_URL}${profile.coverPicUrl})`,
+              backgroundImage: `ur[](${profile.coverPicUrl})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
             <img
-              src={`${process.env.REACT_APP_API_URL}${profile.profilePicUrl}`}
+              src={`${profile.profilePicUrl}`}
               alt="Profile"
               className="rounded-circle shadow position-absolute"
               style={{

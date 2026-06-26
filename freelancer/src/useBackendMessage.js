@@ -6,7 +6,7 @@ const useBackendMessage = (endpoint = '/') => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}${endpoint}`)
+    axios.get(`${endpoint}`)
       .then(res => setMessage(res.data))
       .catch(err => {
         console.error(err);

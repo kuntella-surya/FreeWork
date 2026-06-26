@@ -15,7 +15,7 @@ const SearchBar = () => {
         return;
       }
       try {
-        const res = await fetch("${process.env.REACT_APP_API_URL}/ai/recommend-jobs", {
+        const res = await fetch("/ai/recommend-jobs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query, skills: [] }),

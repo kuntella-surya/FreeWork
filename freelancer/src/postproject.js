@@ -156,8 +156,8 @@ function PostProject() {
   const extractCategoryAndSkills = async () => {
     try {
       const [descRes, skillsRes] = await Promise.all([
-        axios.post("${process.env.REACT_APP_API_URL}/ai/extract-skills", { text: form.description }),
-        axios.post("${process.env.REACT_APP_API_URL}/ai/extract-skills", { text: form.skillsRequired || form.description }),
+        axios.post("/ai/extract-skills", { text: form.description }),
+        axios.post("/ai/extract-skills", { text: form.skillsRequired || form.description }),
       ]);
 
       const suggestedCategory = Object.keys(descRes.data.categorized_skills)[0] || "Others";
@@ -240,7 +240,7 @@ function PostProject() {
         categorizedSkills: form.categorizedSkills,
       };
 
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/project/postp`, {
+      const res = await fetch(`/api/project/postp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
